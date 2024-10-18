@@ -7,6 +7,7 @@ __pycache__
 dist/
 # virtual environment
 football-env*/
+aws/log_from_ec2/
 
 # CMake related directories and files
 third_party/gfootball_engine/build*
