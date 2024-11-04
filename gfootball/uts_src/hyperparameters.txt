@@ -1,0 +1,10 @@
+level=academy_empty_goal_close
+num_timesteps=100000
+
+#level=academy_empty_goal_close
+#num_timesteps=2000000
+#state=extracted_stacked
+#reward_experiment=scoring
+#policy=cnn
+
+
