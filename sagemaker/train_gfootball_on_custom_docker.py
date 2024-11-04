@@ -7,7 +7,7 @@ from datetime import datetime
 # SageMaker 세션 생성
 sagemaker_session = sagemaker.Session()
 
-docker_image_version="2.6"
+docker_image_version="2.7"
 
 # Docker 이미지 URI
 docker_image_uri = f"443142193439.dkr.ecr.ap-southeast-2.amazonaws.com/gfootball-fork:{docker_image_version}"
@@ -32,10 +32,11 @@ custom_estimator = Estimator(
     instance_type=instance_type,
     sagemaker_session=sagemaker_session,
     source_dir="/home/sagemaker-user/gfootball-fork/gfootball/uts_src",
+    output_path=f"s3://sagemaker-ap-southeast-2-443142193439",
     script_mode=True,
     entry_point="train",
 
 )
 
 # 훈련 작업 시작
-custom_estimator.fit(job_name=training_job_name)
+custom_estimator.fit(job_name=training_job_name, wait=False)

@@ -14,28 +14,18 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+OPT_ML_S3_PATH="s3://sagemaker-ap-southeast-2-443142193439/$TRAINING_JOB_NAME/opt_ml.tar.gz"
 
-MODEL_S3_PATH="s3://sagemaker-ap-southeast-2-443142193439/$TRAINING_JOB_NAME/output/model.tar.gz"
-LOG_S3_PATH="s3://sagemaker-ap-southeast-2-443142193439/$TRAINING_JOB_NAME/output/output.tar.gz"
 
-# 로컬 저장 경로 설정
-LOCAL_MODEL_PATH="./downloaded_model"
-LOCAL_LOG_PATH="./downloaded_logs"
+#LOG_S3_PATH="s3://sagemaker-ap-southeast-2-443142193439/$TRAINING_JOB_NAME/output/output.tar.gz"
 
-# 모델 및 로그 파일 다운로드 디렉토리 생성
+LOCAL_MODEL_PATH="./downloaded_model/$TRAINING_JOB_NAME"
+
 mkdir -p $LOCAL_MODEL_PATH
-mkdir -p $LOCAL_LOG_PATH
 
 echo "Downloading model artifacts from S3..."
-aws s3 cp $MODEL_S3_PATH $LOCAL_MODEL_PATH/model.tar.gz
-
-if [ $? -ne 0 ]; then
-    echo "aws s3 cp failed. Exiting."
-    exit 1
-fi
-
-echo "Downloading log files from S3..."
-aws s3 cp $LOG_S3_PATH $LOCAL_LOG_PATH/output.tar.gz
+echo "aws s3 cp $OPT_ML_S3_PATH $LOCAL_MODEL_PATH/opt_ml.tar.gz"
+aws s3 cp $OPT_ML_S3_PATH $LOCAL_MODEL_PATH/opt_ml.tar.gz
 
 if [ $? -ne 0 ]; then
     echo "aws s3 cp failed. Exiting."
@@ -43,9 +33,13 @@ if [ $? -ne 0 ]; then
 fi
 
 # 모델 압축 해제
-tar -xzf $LOCAL_MODEL_PATH/model.tar.gz -C $LOCAL_MODEL_PATH
+tar -xzf $LOCAL_MODEL_PATH/opt_ml.tar.gz -C $LOCAL_MODEL_PATH
 
-# 로그 압축 해제
-tar -xzf $LOCAL_LOG_PATH/output.tar.gz -C $LOCAL_LOG_PATH
+
+if [ $? -ne 0 ]; then
+    echo "tar xzf failed. Exiting."
+    exit 1
+fi
+
 
 echo "Model and logs have been downloaded and extracted."

@@ -30,7 +30,7 @@ import gfootball.env as football_env
 from gfootball.examples import models  
 
 
-log_dir = "/opt/ml/logs"
+log_dir = "/opt/ml/model/logs"
 model_dir = "/opt/ml/model"
 
 logger.configure(dir=log_dir)
@@ -159,7 +159,7 @@ def train(_):
              log_interval=1,
              save_interval=FLAGS.save_interval,
              cliprange=FLAGS.cliprange,
-             #save_path=os.path.join(FLAGS.save_path, "checkpoint"),
+             ##save_path=os.path.join(FLAGS.save_path, "checkpoint"),
              load_path=FLAGS.load_path)
 
 
