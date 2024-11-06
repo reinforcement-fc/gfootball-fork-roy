@@ -63,7 +63,7 @@ flags.DEFINE_integer('nsteps', 128, 'Number of environment steps per epoch; '
 flags.DEFINE_integer('noptepochs', 4, 'Number of updates per epoch.')
 flags.DEFINE_integer('nminibatches', 8,
                      'Number of minibatches to split one epoch to.')
-flags.DEFINE_integer('save_interval', 1000,
+flags.DEFINE_integer('save_interval', 100,
                      'How frequently checkpoints are saved.')
 flags.DEFINE_integer('seed', 0, 'Random seed.')
 flags.DEFINE_float('lr', 0.00008, 'Learning rate')
@@ -145,7 +145,7 @@ def train(_):
   config.gpu_options.allow_growth = True
   tf.Session(config=config).__enter__()
 
-  ppo2.learn(network=FLAGS.policy,
+  model = ppo2.learn(network=FLAGS.policy,
              total_timesteps=FLAGS.num_timesteps,
              env=vec_env,
              seed=FLAGS.seed,
@@ -159,12 +159,16 @@ def train(_):
              log_interval=1,
              save_interval=FLAGS.save_interval,
              cliprange=FLAGS.cliprange,
-             ##save_path=os.path.join(FLAGS.save_path, "checkpoint"),
              load_path=FLAGS.load_path)
 
+  # 저장 경로가 지정된 경우 모델을 .zip 파일로 저장
+  if FLAGS.save_path:
+    # 저장 경로 디렉터리가 없으면 생성
+    os.makedirs(FLAGS.save_path, exist_ok=True)
+    model.save(f"{FLAGS.save_path}/ppo2_{FLAGS.num_timesteps}_model.zip")
+    print(f"Model saved at {FLAGS.save_path}/ppo2_{FLAGS.num_timesteps}_model.zip")
 
 print("sys.argv:", sys.argv)
-
 
 if len(sys.argv) == 1:
     hyperparameters_file = os.path.join(os.path.dirname(__file__), 'hyperparameters.txt')
