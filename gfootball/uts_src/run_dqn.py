@@ -68,7 +68,11 @@ def create_single_football_env(iprocess = 0):
         rewards=FLAGS.reward_experiment,
         logdir=logger.get_dir(),
         render=FLAGS.render)
-    env = monitor.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(), str(iprocess)), allow_early_resets=True)
+    
+    log_path = logger.get_dir() and os.path.join(logger.get_dir(), str(iprocess))
+    env = monitor.Monitor(env, log_path, allow_early_resets=True)
+    #env = monitor.Monitor(env, logger.get_dir() and os.path.join(logger.get_dir(),
+    #                                                           str(iprocess)), allow_early_resets=True)
     
     # Set up manual video recording
     if iprocess == 0:
