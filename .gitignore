@@ -28,3 +28,8 @@ cmake_install.cmake
 # IDE
 .idea
 .vs*
+
+# sagemaker
+sagemaker/downloaded_logs/
+sagemaker/downloaded_model/
+sagemaker/.nfs*
